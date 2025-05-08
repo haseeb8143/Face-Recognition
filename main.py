@@ -10,7 +10,7 @@ cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
 counter = 0
 
-haseeb = cv2.imread("Cheeb.jpg")  # use your own image here
+haseeb = cv2.imread("Cheeb.jpg") 
 seerat = cv2.imread("Seerat.png")
 
 list_of_ppl = {
