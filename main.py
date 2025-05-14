@@ -1,6 +1,10 @@
 import threading
 
+import smtplib
+
+
 import cv2
+
 from deepface import DeepFace
 
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
@@ -18,8 +22,9 @@ list_of_ppl = {
     "Seerat": seerat
 }
 
-face_match = False
 
+face_match = False
+previous_person = ''
 person_in_frame = ''
 
 def check_face(frame):
@@ -42,6 +47,8 @@ def check_face(frame):
 
 
 while True:
+    
+    
     ret, frame = cap.read()
 
     if ret:
@@ -53,6 +60,19 @@ while True:
         counter += 1
         if face_match:
             cv2.putText(frame, f"OMG its {person_in_frame} >~<", (20, 450), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 3)
+
+            if person_in_frame != previous_person:
+
+                s = smtplib.SMTP('smtp.gmail.com', 587)
+                # start TLS for security
+                s.starttls()
+                s.login("pyface.notification@gmail.com", "xxsj azep siyl psvr")
+                message = f"{person_in_frame} is at the door."
+                # sending the mail
+                s.sendmail("pyface.notification@gmail.com", "haseebiqbal8143@gmail.com", message)
+
+            # person_in_frame = previous_person
+            previous_person = person_in_frame
         else:
             cv2.putText(frame, "NO MATCH!", (20, 450), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
 
@@ -60,8 +80,8 @@ while True:
 
     key = cv2.waitKey(1)
     if key == ord('q'):
+        s.quit()
         break
 
 cap.release()
 cv2.destroyAllWindows() 
-
